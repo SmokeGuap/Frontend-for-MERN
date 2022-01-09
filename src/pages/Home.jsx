@@ -28,7 +28,7 @@ function Home() {
     data: dataTags,
     isLoading: isLoadingTags,
     isError: isErrorTags,
-  } = useQuery('posts', getTags);
+  } = useQuery('tags', getTags);
 
   return (
     <>
@@ -66,7 +66,11 @@ function Home() {
               )}
             </Grid>
             <Grid xs={4} item>
-              <TagsBlock items={dataTags?.items} isLoading={isLoadingTags} />
+              {isErrorTags ? (
+                <Alert severity='error'>Ошибка соединения с сервером</Alert>
+              ) : (
+                <TagsBlock items={dataTags} isLoading={isLoadingTags} />
+              )}
               <CommentsBlock
                 items={[
                   {
