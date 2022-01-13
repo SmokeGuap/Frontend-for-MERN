@@ -3,10 +3,14 @@ import Container from '@mui/material/Container';
 
 import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../../App';
 
 function Header() {
-  const isAuth = false;
-
+  const { isAuth, setAuth } = useContext(UserContext);
+  const onClickLogout = () => {
+    setAuth(false);
+  };
   return (
     <div className={styles.root}>
       <Container maxWidth='lg'>

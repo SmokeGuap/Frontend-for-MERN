@@ -10,16 +10,15 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
-    <CssBaseline />
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </ThemeProvider>
+      <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </BrowserRouter>
+      </ThemeProvider>
   </>
 );
