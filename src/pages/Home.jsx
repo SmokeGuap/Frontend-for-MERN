@@ -8,6 +8,9 @@ import { CommentsBlock } from '../components/index.js';
 import { useQuery } from 'react-query';
 import { Alert } from '@mui/material';
 import { getPosts, getTags } from '../APIs/index.js';
+import { useSelector } from 'react-redux';
+import { UserContext } from '../App.jsx';
+import { useContext } from 'react';
 
 function Home() {
   const {
@@ -20,7 +23,7 @@ function Home() {
     isLoading: isLoadingTags,
     isError: isErrorTags,
   } = useQuery('tags', getTags);
-
+  const { user } = useContext(UserContext);
   return (
     <>
       {isErrorPosts ? (
@@ -51,7 +54,7 @@ function Home() {
                     viewsCount={item.viewCount}
                     commentsCount={3}
                     tags={item.tags}
-                    isEditable
+                    isEditable={user?._id == item.author}
                   />
                 )
               )}

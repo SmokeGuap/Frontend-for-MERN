@@ -43,5 +43,16 @@ async function reg(data) {
     navigate('/login');
   }
 }
+async function authMe() {
+  const res = await fetch('http://localhost:4000/auth/me', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+  });
+  const user = await res.json();
+  return user;
+}
 
-export { getPosts, getPost, getTags, login, reg };
+export { getPosts, getPost, getTags, login, reg, authMe };
