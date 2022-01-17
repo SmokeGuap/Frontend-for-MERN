@@ -3,19 +3,16 @@ import { AddComment } from '../components/index.js';
 import { CommentsBlock } from '../components/index.js';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { getPost } from '../APIs/index.js';
 
 function FullPost() {
   const { id } = useParams();
-
-  async function getPost() {
-    const res = await fetch(`http://localhost:4000/posts/${id}`);
-    const data = await res.json();
-    return data;
-  }
   const { data, isLoading, isError } = useQuery('post', getPost);
+
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
+
   return (
     <>
       <Post

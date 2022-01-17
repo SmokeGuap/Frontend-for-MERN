@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import { UserContext } from '../../App';
 import { useForm } from 'react-hook-form';
+import { reg } from '../../APIs';
 
 function Registration() {
   const navigate = useNavigate();
@@ -31,21 +32,7 @@ function Registration() {
     }
   }, [isAuth]);
 
-  async function reg(data) {
-    const res = await fetch('http://localhost:4000/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    const user = await res.json();
-    if (!res.ok) {
-      alert('Не удалось зарегистрироваться');
-    } else {
-      navigate('/login');
-    }
-  }
+
 
   const onSumbit = (data) => {
     reg(data);
