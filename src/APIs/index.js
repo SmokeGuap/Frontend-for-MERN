@@ -54,5 +54,15 @@ async function authMe() {
   const user = await res.json();
   return user;
 }
-
-export { getPosts, getPost, getTags, login, reg, authMe };
+async function upload(data) {
+  const res = await fetch('http://localhost:4000/uploads', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+    body: data,
+  });
+  const result = await res.json();
+  return result;
+}
+export { getPosts, getPost, getTags, login, reg, authMe, upload };

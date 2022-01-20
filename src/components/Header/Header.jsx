@@ -22,7 +22,7 @@ function Header() {
           <div className={styles.buttons}>
             {isAuth ? (
               <>
-                <Link to='/posts/create'>
+                <Link to='/addpost'>
                   <Button variant='contained'>Написать статью</Button>
                 </Link>
                 <Button
