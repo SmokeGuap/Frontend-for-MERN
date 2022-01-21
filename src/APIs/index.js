@@ -8,7 +8,7 @@ async function getTags() {
   const data = await res.json();
   return data;
 }
-async function getPost() {
+async function getPost(id) {
   const res = await fetch(`http://localhost:4000/posts/${id}`);
   const data = await res.json();
   return data;
@@ -65,4 +65,16 @@ async function upload(data) {
   const result = await res.json();
   return result;
 }
-export { getPosts, getPost, getTags, login, reg, authMe, upload };
+async function addPost(data) {
+  const res = await fetch('http://localhost:4000/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+    body: JSON.stringify(data),
+  });
+  const result = await res.json();
+  return result;
+}
+export { getPosts, getPost, getTags, login, reg, authMe, upload, addPost };

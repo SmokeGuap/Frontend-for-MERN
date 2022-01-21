@@ -8,15 +8,15 @@ import 'easymde/dist/easymde.min.css';
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../App';
-import { upload } from '../../APIs';
+import { addPost, upload } from '../../APIs';
 
 function AddPost() {
   const navigate = useNavigate();
   const { isAuth } = useContext(UserContext);
-  const [value, setValue] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [text, setText] = useState('');
   const inputRef = useRef(null);
 
   const handleChangeFile = async (event) => {
@@ -37,7 +37,7 @@ function AddPost() {
   };
 
   const onChange = useCallback((value) => {
-    setValue(value);
+    setText(value);
   }, []);
 
   const options = useMemo(
@@ -54,6 +54,23 @@ function AddPost() {
     }),
     []
   );
+  const handleSubmit = async () => {
+    try {
+      const fields = {
+        title,
+        text,
+        imageUrl,
+        tags,
+      };
+      console.log(fields);
+
+      const data = await addPost(fields);
+      navigate(`/posts/${data._id}`);
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
   if (!isAuth && !window.localStorage.getItem('token')) {
     navigate('/');
   }
@@ -103,12 +120,12 @@ function AddPost() {
       />
       <SimpleMDE
         className={styles.editor}
-        value={value}
+        value={text}
         onChange={onChange}
         options={options}
       />
       <div className={styles.buttons}>
-        <Button size='large' variant='contained'>
+        <Button onClick={handleSubmit} size='large' variant='contained'>
           Опубликовать
         </Button>
         <a href='/'>

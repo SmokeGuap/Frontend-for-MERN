@@ -7,12 +7,11 @@ import { getPost } from '../APIs/index.js';
 
 function FullPost() {
   const { id } = useParams();
-  const { data, isLoading, isError } = useQuery('post', getPost);
+  const { data, isLoading, isError } = useQuery(['post', id], ()=>getPost(id));
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
-
   return (
     <>
       <Post
