@@ -48,7 +48,7 @@ function Home() {
                     key={item._id}
                     id={item._id}
                     title={item.title}
-                    imageUrl={item.imageUrl}
+                    imageUrl={`http://localhost:4000${item.imageUrl}`}
                     user={item.author}
                     createdAt={item.createdAt}
                     viewsCount={item.viewCount}

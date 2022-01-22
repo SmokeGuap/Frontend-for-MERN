@@ -4,10 +4,13 @@ import { CommentsBlock } from '../components/index.js';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { getPost } from '../APIs/index.js';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown.js';
 
 function FullPost() {
   const { id } = useParams();
-  const { data, isLoading, isError } = useQuery(['post', id], ()=>getPost(id));
+  const { data, isLoading, isError } = useQuery(['post', id], () =>
+    getPost(id)
+  );
 
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
@@ -17,7 +20,7 @@ function FullPost() {
       <Post
         id={data._id}
         title={data.title}
-        imageUrl={data.imageUrl}
+        imageUrl={`http://localhost:4000${data.imageUrl}`}
         user={data.author}
         createdAt={data.createdAt}
         viewsCount={data.viewCount}
@@ -25,7 +28,7 @@ function FullPost() {
         tags={data.tags}
         isFullPost
       >
-        <p>{data.text}</p>
+        <ReactMarkdown children={data.text} />
       </Post>
       <CommentsBlock
         items={[

@@ -60,7 +60,7 @@ function AddPost() {
         title,
         text,
         imageUrl,
-        tags,
+        tags: tags.split(','),
       };
       console.log(fields);
 
