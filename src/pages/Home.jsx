@@ -7,8 +7,7 @@ import { TagsBlock } from '../components/index.js';
 import { CommentsBlock } from '../components/index.js';
 import { useQuery } from 'react-query';
 import { Alert } from '@mui/material';
-import { deletePost, getPosts, getTags } from '../APIs/index.js';
-import { useSelector } from 'react-redux';
+import { getPosts, getTags } from '../APIs/index.js';
 import { UserContext } from '../App.jsx';
 import { useContext } from 'react';
 

@@ -9,7 +9,9 @@ import styles from './Post.module.scss';
 import UserInfo from '../UserInfo/UserInfo.jsx';
 import PostSkeleton from './Skeleton.jsx';
 import { Link } from 'react-router-dom';
-import { deletePost, getPosts } from '../../APIs';
+import { deletePost } from '../../APIs';
+import { useMutation } from 'react-query';
+import { queryClient } from '../../main';
 
 function Post({
   id,
@@ -25,14 +27,16 @@ function Post({
   isLoading,
   isEditable,
 }) {
+  const deleteMutation = useMutation((id) => deletePost(id), {
+    onSuccess: () => queryClient.invalidateQueries(['posts']),
+  });
+  const onClickRemove = () => {
+    deleteMutation.mutate(id);
+  };
+
   if (isLoading) {
     return <PostSkeleton />;
   }
-
-  const onClickRemove = () => {
-    deletePost(id);
-  };
-
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
       {isEditable && (
@@ -42,7 +46,11 @@ function Post({
               <EditIcon />
             </IconButton>
           </Link>
-          <IconButton onClick={onClickRemove} color='secondary'>
+          <IconButton
+            onClick={onClickRemove}
+            // onClick={() => deleteMutation.mutate(id)}
+            color='secondary'
+          >
             <DeleteIcon />
           </IconButton>
         </div>

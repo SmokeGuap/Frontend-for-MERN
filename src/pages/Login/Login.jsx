@@ -33,6 +33,7 @@ function Login() {
 
   const onSumbit = (data) => {
     login(data);
+    setAuth(true);
   };
 
   return (

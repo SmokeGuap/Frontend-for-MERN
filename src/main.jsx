@@ -9,7 +9,7 @@ import { theme } from './theme';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
       <CssBaseline />
