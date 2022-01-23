@@ -9,6 +9,7 @@ import styles from './Post.module.scss';
 import UserInfo from '../UserInfo/UserInfo.jsx';
 import PostSkeleton from './Skeleton.jsx';
 import { Link } from 'react-router-dom';
+import { deletePost, getPosts } from '../../APIs';
 
 function Post({
   id,
@@ -28,7 +29,9 @@ function Post({
     return <PostSkeleton />;
   }
 
-  const onClickRemove = () => {};
+  const onClickRemove = () => {
+    deletePost(id);
+  };
 
   return (
     <div className={clsx(styles.root, { [styles.rootFull]: isFullPost })}>
@@ -60,7 +63,7 @@ function Post({
             {isFullPost ? title : <Link to={`/posts/${id}`}>{title}</Link>}
           </h2>
           <ul className={styles.tags}>
-            {tags.map((name) => (
+            {tags?.map((name) => (
               <li key={name}>
                 <Link to={`/tag/${name}`}>#{name}</Link>
               </li>

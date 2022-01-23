@@ -11,7 +11,6 @@ function FullPost() {
   const { data, isLoading, isError } = useQuery(['post', id], () =>
     getPost(id)
   );
-
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
@@ -20,7 +19,7 @@ function FullPost() {
       <Post
         id={data._id}
         title={data.title}
-        imageUrl={`http://localhost:4000${data.imageUrl}`}
+        imageUrl={data.imageUrl ? `http://localhost:4000${data.imageUrl}` : ''}
         user={data.author}
         createdAt={data.createdAt}
         viewsCount={data.viewCount}

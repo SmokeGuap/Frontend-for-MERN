@@ -77,4 +77,36 @@ async function addPost(data) {
   const result = await res.json();
   return result;
 }
-export { getPosts, getPost, getTags, login, reg, authMe, upload, addPost };
+async function editPost(id,data) {
+  const res = await fetch(`http://localhost:4000/posts/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+    body: JSON.stringify(data),
+  });
+  const result = await res.json();
+  return result;
+}
+async function deletePost(id) {
+  const res = await fetch(`http://localhost:4000/posts/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+  });
+  const result = await res.json();
+}
+export {
+  getPosts,
+  getPost,
+  getTags,
+  login,
+  reg,
+  authMe,
+  upload,
+  addPost,
+  deletePost,
+  editPost,
+};
