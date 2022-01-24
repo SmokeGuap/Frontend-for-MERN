@@ -22,8 +22,8 @@ function Login() {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      email: 'xdfgdfg@dsfg.com',
-      password: 'sdfsdfsdfsdf',
+      email: '',
+      password: '',
     },
     mode: 'onChange',
   });
