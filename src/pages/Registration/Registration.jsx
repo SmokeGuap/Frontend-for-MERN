@@ -23,6 +23,7 @@ function Registration() {
       email: '',
       password: '',
     },
+    mode: 'onChange',
   });
 
   useEffect(() => {
@@ -34,7 +35,14 @@ function Registration() {
   const onSumbit = (data) => {
     reg(data);
   };
-
+  const isValidEmail = (email) =>
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+      email
+    );
+  const handleEmailValidation = (email) => {
+    const isValid = isValidEmail(email);
+    return isValid;
+  };
   return (
     <Paper classes={{ root: styles.root }}>
       <Typography classes={{ root: styles.title }} variant='h5'>
@@ -45,7 +53,10 @@ function Registration() {
       </div>
       <form onSubmit={handleSubmit(onSumbit)}>
         <TextField
-          {...register('fullName', { required: 'Укажите полное имя' })}
+          {...register('fullName', {
+            required: 'Укажите полное имя',
+            minLength: 6,
+          })}
           error={Boolean(errors.fullName?.message)}
           helperText={errors.fullName?.message}
           className={styles.field}
@@ -54,7 +65,10 @@ function Registration() {
         />
         <TextField
           type='email'
-          {...register('email', { required: 'Укажите почту' })}
+          {...register('email', {
+            required: 'Укажите почту',
+            validate: handleEmailValidation,
+          })}
           error={Boolean(errors.email?.message)}
           helperText={errors.email?.message}
           className={styles.field}
@@ -66,7 +80,10 @@ function Registration() {
           className={styles.field}
           error={Boolean(errors.password?.message)}
           helperText={errors.password?.message}
-          {...register('password', { required: 'Укажите пароль' })}
+          {...register('password', {
+            required: 'Укажите пароль',
+            minLength: 8,
+          })}
           label='Пароль'
           fullWidth
         />

@@ -18,6 +18,7 @@ function App() {
       setUser(data);
     });
   }, [isAuth]);
+
   return (
     <>
       <UserContext.Provider value={{ isAuth, setAuth, user }}>

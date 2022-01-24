@@ -21,12 +21,8 @@ async function login(data) {
     },
     body: JSON.stringify(data),
   });
-  if (!res.ok) {
-    alert('Не удалось авторизоваться');
-  } else {
-    const {token} = await res.json();
-    window.localStorage.setItem('token', token);
-  }
+  const result = await res.json();
+  return result;
 }
 async function reg(data) {
   const res = await fetch('http://localhost:4000/auth/register', {
