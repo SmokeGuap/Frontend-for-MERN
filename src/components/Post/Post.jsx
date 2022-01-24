@@ -46,11 +46,7 @@ function Post({
               <EditIcon />
             </IconButton>
           </Link>
-          <IconButton
-            onClick={onClickRemove}
-            // onClick={() => deleteMutation.mutate(id)}
-            color='secondary'
-          >
+          <IconButton onClick={onClickRemove} color='secondary'>
             <DeleteIcon />
           </IconButton>
         </div>
