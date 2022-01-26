@@ -9,9 +9,10 @@ import { useQuery } from 'react-query';
 import { Alert } from '@mui/material';
 import { getPosts, getTags } from '../APIs/index.js';
 import { UserContext } from '../App.jsx';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 function Home() {
+  const [filter, setFilter] = useState(0);
   const {
     data: dataPosts,
     isLoading: isLoadingPosts,
@@ -23,23 +24,30 @@ function Home() {
     isError: isErrorTags,
   } = useQuery('tags', getTags);
   const { user } = useContext(UserContext);
+
+  const filterPost = (arr) => {
+    const sort = arr.slice();
+    sort.sort((a, b) => b.viewCount - a.viewCount);
+    return sort;
+  };
   return (
     <>
       {isErrorPosts ? (
         <Alert severity='error'>Ошибка соединения с сервером</Alert>
       ) : (
         <>
-          <Tabs
-            style={{ marginBottom: 15 }}
-            value={0}
-            aria-label='basic tabs example'
-          >
-            <Tab label='Новые' />
-            <Tab label='Популярные' />
+          <Tabs style={{ marginBottom: 15 }} value={filter}>
+            <Tab onClick={() => setFilter(0)} label='Новые' />
+            <Tab onClick={() => setFilter(1)} label='Популярные' />
           </Tabs>
           <Grid container spacing={4}>
             <Grid xs={8} item>
-              {(isLoadingPosts ? [...Array(5)] : dataPosts).map((item, index) =>
+              {(isLoadingPosts
+                ? [...Array(5)]
+                : filter
+                ? filterPost(dataPosts)
+                : dataPosts
+              ).map((item, index) =>
                 isLoadingPosts ? (
                   <Post key={index} isLoading={true} />
                 ) : (
