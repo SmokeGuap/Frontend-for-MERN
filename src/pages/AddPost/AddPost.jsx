@@ -16,11 +16,14 @@ import {
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
 import { addPost, editPost, getPost, upload } from '../../APIs';
+import { useForm } from 'react-hook-form';
+import { Alert } from '@mui/material';
 
 function AddPost() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuth } = useContext(UserContext);
+  const [alert, setAlert] = useState([]);
   const isEdit = Boolean(id);
 
   const [post, setPost] = useState({
@@ -31,6 +34,18 @@ function AddPost() {
   });
   const inputRef = useRef(null);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onChange',
+  });
+
   useEffect(() => {
     try {
       if (id) {
@@ -38,7 +53,7 @@ function AddPost() {
           setPost({
             imageUrl: data.imageUrl,
             title: data.title,
-            tags: data.tags.join(','),
+            tags: data.tags.join(' '),
             text: data.text,
           });
         });
@@ -104,10 +119,13 @@ function AddPost() {
       setPost({ ...post, tags: value });
     }
   };
-  const handleSubmit = async () => {
+  const onSubmit = async () => {
     try {
       const data = isEdit ? await editPost(id, post) : await addPost(post);
-      navigate(`/posts/${isEdit ? id : data._id}`);
+      if (data._id || id) {
+        navigate(`/posts/${isEdit ? id : data._id}`);
+      }
+      setAlert(data);
     } catch (error) {
       console.warn(error);
     }
@@ -157,7 +175,7 @@ function AddPost() {
         id='tags'
         classes={{ root: styles.tags }}
         variant='standard'
-        placeholder='Теги'
+        placeholder='Укажите теги через пробел'
         value={post.tags}
         onChange={handleChange}
         fullWidth
@@ -169,13 +187,21 @@ function AddPost() {
         options={options}
       />
       <div className={styles.buttons}>
-        <Button onClick={handleSubmit} size='large' variant='contained'>
+        <Button onClick={onSubmit} size='large' variant='contained'>
           {isEdit ? 'Редактировать' : 'Опубликовать'}
         </Button>
         <Link to='/'>
           <Button size='large'>Отмена</Button>
         </Link>
       </div>
+      {alert.length > 0 &&
+        alert.map((item, index) => {
+          return (
+            <Alert className={styles.alert} key={index} severity='error'>
+              {item.msg}
+            </Alert>
+          );
+        })}
     </Paper>
   );
 }
