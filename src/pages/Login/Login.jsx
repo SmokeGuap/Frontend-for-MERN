@@ -13,7 +13,7 @@ import { login } from '../../APIs';
 
 function Login() {
   const navigate = useNavigate();
-  const [alert, setAlert ]= useState([]);
+  const [alert, setAlert] = useState([]);
   const { isAuth, setAuth } = useContext(UserContext);
   const {
     register,
