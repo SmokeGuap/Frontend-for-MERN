@@ -35,11 +35,11 @@ function CommentsBlock({ items, children, isLoading = true }) {
                 />
               )}
             </ListItem>
-            <Divider variant='inset' component='li' />
+            <Divider variant='inset' />
           </React.Fragment>
         ))}
-      </List>
       {children}
+      </List>
     </SideBlock>
   );
 }
