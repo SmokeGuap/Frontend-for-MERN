@@ -3,7 +3,7 @@ import { AddComment } from '../components/index.js';
 import { CommentsBlock } from '../components/index.js';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
-import { getPost } from '../APIs/index.js';
+import { getCommentsByPost, getPost } from '../APIs/index.js';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown.js';
 import { Alert } from '@mui/material';
 import { useContext } from 'react';
@@ -12,51 +12,49 @@ import { UserContext } from '../App.jsx';
 function FullPost() {
   const { id } = useParams();
   const { user } = useContext(UserContext);
-  const { data, isLoading, isError } = useQuery(['post', id], () =>
-    getPost(id)
-  );
-  if (isLoading) {
-    return <Post isLoading={isLoading} isFullPost />;
+  const {
+    data: dataPost,
+    isLoading: isLoadingPost,
+    isError: isErrorPost,
+  } = useQuery(['post', id], () => getPost(id));
+  const {
+    data: dataComments,
+    isLoading: isLoadingComments,
+    isError: isErrorComments,
+  } = useQuery(['comment', id], () => getCommentsByPost(id));
+
+  if (isLoadingPost) {
+    return <Post isLoading={isLoadingPost} isFullPost />;
   }
-  if (isError) {
+  if (isErrorPost) {
     return <Alert severity='error'>Ошибка соединения с сервером</Alert>;
   }
+
+  
   return (
     <>
       <Post
-        id={data._id}
-        title={data.title}
-        imageUrl={data.imageUrl ? `http://localhost:4000${data.imageUrl}` : ''}
-        user={data.author}
-        createdAt={data.createdAt}
-        viewsCount={data.viewCount}
+        id={dataPost._id}
+        title={dataPost.title}
+        imageUrl={
+          dataPost.imageUrl ? `http://localhost:4000${dataPost.imageUrl}` : ''
+        }
+        user={dataPost.author}
+        createdAt={dataPost.createdAt}
+        viewsCount={dataPost.viewCount}
         commentsCount={3}
-        tags={data.tags}
+        tags={dataPost.tags}
         isFullPost
       >
-        <ReactMarkdown children={data.text} />
+        <ReactMarkdown children={dataPost.text} />
       </Post>
-      <CommentsBlock
-        items={[
-          {
-            user: {
-              fullName: 'Вася Пупкин',
-              avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
-            },
-            text: 'Это тестовый комментарий',
-          },
-          {
-            user: {
-              fullName: 'Иван Иванов',
-              avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
-            },
-            text: 'When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top',
-          },
-        ]}
-        isLoading={false}
-      >
-        <AddComment me={user} />
-      </CommentsBlock>
+      {isErrorComments ? (
+        <Alert severity='error'>Ошибка соединения с сервером</Alert>
+      ) : (
+        <CommentsBlock items={dataComments} isLoading={isLoadingComments}>
+          <AddComment me={user} />
+        </CommentsBlock>
+      )}
     </>
   );
 }
