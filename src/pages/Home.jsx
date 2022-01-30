@@ -7,7 +7,7 @@ import { TagsBlock } from '../components/index.js';
 import { CommentsBlock } from '../components/index.js';
 import { useQuery } from 'react-query';
 import { Alert, Box, Typography } from '@mui/material';
-import { getPosts, getTags } from '../APIs/index.js';
+import { getComments, getPosts, getTags } from '../APIs/index.js';
 import { UserContext } from '../App.jsx';
 import { useContext, useState } from 'react';
 
@@ -24,8 +24,14 @@ function Home() {
     isLoading: isLoadingTags,
     isError: isErrorTags,
   } = useQuery('tags', getTags);
-  const { user } = useContext(UserContext);
+  const {
+    data: dataComments,
+    isLoading: isLoadingComments,
+    isError: isErrorComments,
+  } = useQuery('comments', getComments);
 
+  const { user } = useContext(UserContext);
+  console.log(dataComments);
   const filterPostByViews = (arr) => {
     const sort = [...arr];
     sort.sort((a, b) => b.viewCount - a.viewCount);
@@ -103,25 +109,14 @@ function Home() {
                   tagsFilter={setTagsFilter}
                 />
               )}
-              <CommentsBlock
-                items={[
-                  {
-                    user: {
-                      fullName: 'Кирилл Горшков',
-                      avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
-                    },
-                    text: 'Im gay)',
-                  },
-                  {
-                    user: {
-                      fullName: 'Иван Бочковский',
-                      avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
-                    },
-                    text: 'me too',
-                  },
-                ]}
-                isLoading={false}
-              />
+              {isErrorComments ? (
+                <Alert severity='error'>Ошибка соединения с сервером</Alert>
+              ) : (
+                <CommentsBlock
+                  items={dataComments}
+                  isLoading={isLoadingComments}
+                />
+              )}
             </Grid>
           </Grid>
         </>
