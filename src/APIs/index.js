@@ -115,6 +115,16 @@ async function deletePost(id) {
   const result = await res.json();
   return result;
 }
+async function deleteComment(id) {
+  const res = await fetch(`http://localhost:4000/comments/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+  });
+  const result = await res.json();
+  return result;
+}
 export {
   getPosts,
   getPost,
@@ -128,5 +138,6 @@ export {
   addPost,
   addComment,
   deletePost,
+  deleteComment,
   editPost,
 };

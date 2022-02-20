@@ -11,8 +11,19 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
 import { Fragment } from 'react';
+import { deleteComment } from '../APIs/index.js';
+import { queryClient } from '../main.jsx';
+import { useMutation } from 'react-query';
 
 function CommentsBlock({ me, items, children, isLoading = true }) {
+  const deleteMutation = useMutation((id) => deleteComment(id), {
+    onSuccess: () => queryClient.invalidateQueries(['comment']),
+  });
+
+  const onClickRemove = (id) => {
+    deleteMutation.mutate(id);
+  };
+
   return (
     <SideBlock title='Комментарии'>
       <List>
@@ -46,7 +57,10 @@ function CommentsBlock({ me, items, children, isLoading = true }) {
                       <IconButton color='primary'>
                         <EditIcon />
                       </IconButton>
-                      <IconButton color='secondary'>
+                      <IconButton
+                        onClick={() => onClickRemove(obj._id)}
+                        color='secondary'
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </div>
