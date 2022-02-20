@@ -30,7 +30,6 @@ function FullPost() {
     return <Alert severity='error'>Ошибка соединения с сервером</Alert>;
   }
 
-  
   return (
     <>
       <Post
@@ -42,7 +41,7 @@ function FullPost() {
         user={dataPost.author}
         createdAt={dataPost.createdAt}
         viewsCount={dataPost.viewCount}
-        commentsCount={3}
+        commentsCount={dataComments?.length}
         tags={dataPost.tags}
         isFullPost
       >
@@ -51,8 +50,12 @@ function FullPost() {
       {isErrorComments ? (
         <Alert severity='error'>Ошибка соединения с сервером</Alert>
       ) : (
-        <CommentsBlock items={dataComments} isLoading={isLoadingComments}>
-          <AddComment me={user} />
+        <CommentsBlock
+          me={user}
+          items={dataComments}
+          isLoading={isLoadingComments}
+        >
+          {user && <AddComment me={user} />}
         </CommentsBlock>
       )}
     </>
