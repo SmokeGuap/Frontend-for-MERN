@@ -23,7 +23,7 @@ function AddComment({ me }) {
   return (
     <ListItem alignItems='flex-start'>
       <ListItemAvatar>
-        <Avatar alt='sdgfgsd' src={me.avatarUrl} />
+        <Avatar alt='avatar' src={me.avatarUrl} />
       </ListItemAvatar>
       <TextField
         onChange={(e) => setComment(e.target.value)}

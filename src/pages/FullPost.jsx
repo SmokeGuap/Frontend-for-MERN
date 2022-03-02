@@ -55,7 +55,6 @@ function FullPost() {
           items={dataComments}
           isLoading={isLoadingComments}
         >
-          {user && <AddComment me={user} />}
         </CommentsBlock>
       )}
     </>
