@@ -1,6 +1,6 @@
-import { Post } from '../components';
-import { Index } from '../components/';
-import { CommentsBlock } from '../components/';
+import { Post } from '../components/index.js';
+import { AddComment } from '../components/index.js';
+import { CommentsBlock } from '../components/index.js';
 
 function FullPost() {
   return (
@@ -17,7 +17,7 @@ function FullPost() {
         createdAt={'12 июня 2022 г.'}
         viewsCount={150}
         commentsCount={3}
-        tags={['react', 'fun', 'typescript']}
+        tags={['react', 'funs', 'typescript']}
         isFullPost
       >
         <p>
@@ -35,7 +35,7 @@ function FullPost() {
               fullName: 'Вася Пупкин',
               avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
             },
-            text: 'Это тестовый комментарий 555555',
+            text: 'Это тестовый комментарий',
           },
           {
             user: {
@@ -47,7 +47,7 @@ function FullPost() {
         ]}
         isLoading={false}
       >
-        <Index />
+        <AddComment />
       </CommentsBlock>
     </>
   );

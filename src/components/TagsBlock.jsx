@@ -6,7 +6,7 @@ import TagIcon from '@mui/icons-material/Tag';
 import ListItemText from '@mui/material/ListItemText';
 import Skeleton from '@mui/material/Skeleton';
 
-import { SideBlock } from './SideBlock';
+import SideBlock from './SideBlock/SideBlock.jsx';
 
 function TagsBlock({ items, isLoading = true }) {
   return (
@@ -14,6 +14,7 @@ function TagsBlock({ items, isLoading = true }) {
       <List>
         {(isLoading ? [...Array(5)] : items).map((name, i) => (
           <a
+            key={i}
             style={{ textDecoration: 'none', color: 'black' }}
             href={`/tags/${name}`}
           >

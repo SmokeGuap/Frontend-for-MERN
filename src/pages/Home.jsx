@@ -1,3 +1,11 @@
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Grid from '@mui/material/Grid';
+
+import { Post } from '../components/index.js';
+import { TagsBlock } from '../components/index.js';
+import { CommentsBlock } from '../components/index.js';
+
 function Home() {
   return (
     <>
@@ -11,8 +19,9 @@ function Home() {
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
-          {[...Array(5)].map(() => (
+          {[...Array(5)].map((item, index) => (
             <Post
+              key={index}
               id={1}
               title='Roast the code #1 | Rock Paper Scissors'
               imageUrl='https://res.cloudinary.com/practicaldev/image/fetch/s--UnAfrEG8--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/icohm5g0axh9wjmu4oc3.png'
