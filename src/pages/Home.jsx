@@ -14,11 +14,25 @@ function Home() {
     const data = await res.json();
     return data;
   }
-  const { data, isLoading, isError } = useQuery('posts', getPosts);
+  async function getTags() {
+    const res = await fetch('http://localhost:4000/posts/tags');
+    const data = await res.json();
+    return data;
+  }
+  const {
+    data: dataPosts,
+    isLoading: isLoadingPosts,
+    isError: isErrorPosts,
+  } = useQuery('posts', getPosts);
+  const {
+    data: dataTags,
+    isLoading: isLoadingTags,
+    isError: isErrorTags,
+  } = useQuery('posts', getTags);
 
   return (
     <>
-      {isError ? (
+      {isErrorPosts ? (
         <Alert severity='error'>Ошибка соединения с сервером</Alert>
       ) : (
         <>
@@ -32,8 +46,8 @@ function Home() {
           </Tabs>
           <Grid container spacing={4}>
             <Grid xs={8} item>
-              {(isLoading ? [...Array(5)] : data).map((item, index) =>
-                isLoading ? (
+              {(isLoadingPosts ? [...Array(5)] : dataPosts).map((item, index) =>
+                isLoadingPosts ? (
                   <Post key={index} isLoading={true} />
                 ) : (
                   <Post
