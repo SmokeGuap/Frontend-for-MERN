@@ -66,10 +66,7 @@ function Home() {
               )}
             </Grid>
             <Grid xs={4} item>
-              <TagsBlock
-                items={['react', 'typescript', 'заметки']}
-                isLoading={false}
-              />
+              <TagsBlock items={dataTags.items} isLoading={isLoadingTags} />
               <CommentsBlock
                 items={[
                   {
