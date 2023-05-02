@@ -7,8 +7,6 @@ import './index.scss';
 
 import { theme } from './theme';
 import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './redux/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
@@ -19,9 +17,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <Provider store={store}>
-            <App />
-          </Provider>
+          <App />
         </QueryClientProvider>
       </BrowserRouter>
     </ThemeProvider>
