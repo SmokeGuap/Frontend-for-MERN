@@ -7,18 +7,9 @@ import { TagsBlock } from '../components/index.js';
 import { CommentsBlock } from '../components/index.js';
 import { useQuery } from 'react-query';
 import { Alert } from '@mui/material';
+import { getPosts, getTags } from '../APIs/index.js';
 
 function Home() {
-  async function getPosts() {
-    const res = await fetch('http://localhost:4000/posts');
-    const data = await res.json();
-    return data;
-  }
-  async function getTags() {
-    const res = await fetch('http://localhost:4000/posts/tags');
-    const data = await res.json();
-    return data;
-  }
   const {
     data: dataPosts,
     isLoading: isLoadingPosts,

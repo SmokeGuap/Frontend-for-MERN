@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useContext, useEffect } from 'react';
 import { UserContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../APIs';
 
 function Login() {
   const navigate = useNavigate();
@@ -29,23 +30,6 @@ function Login() {
       navigate('/');
     }
   }, [isAuth]);
-  async function login(data) {
-    const res = await fetch('http://localhost:4000/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    const user = await res.json();
-    if (!res) {
-      alert('Не удалось авторизоваться');
-    }
-    if (res.hasOwnProperty('token')) {
-      window.localStorage.setItem('token', res.token);
-      setAuth(true);
-    }
-  }
 
   const onSumbit = (data) => {
     login(data);
