@@ -5,8 +5,13 @@ import Button from '@mui/material/Button';
 
 import styles from './Login.module.scss';
 import { useForm } from 'react-hook-form';
+import { useContext, useEffect } from 'react';
+import { UserContext } from '../../App';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
+  const { isAuth, setAuth } = useContext(UserContext);
   const {
     register,
     handleSubmit,
@@ -18,6 +23,12 @@ function Login() {
       password: '',
     },
   });
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/');
+    }
+  }, [isAuth]);
   async function login(data) {
     const res = await fetch('http://localhost:4000/auth/login', {
       method: 'POST',
@@ -27,12 +38,22 @@ function Login() {
       body: JSON.stringify(data),
     });
     const user = await res.json();
-    console.log(user);
+    if (res.ok) {
+      setAuth(true);
+    }
     return user;
   }
-  const onSumbit = (data) => {
-    login(data);
+
+  const onSumbit = async (data) => {
+    const res = await login(data);
+    if (!res) {
+      alert('Не удалось авторизоваться');
+    }
+    if (res.hasOwnProperty('token')) {
+      window.localStorage.setItem('token', res.token);
+    }
   };
+
   return (
     <Paper classes={{ root: styles.root }}>
       <Typography classes={{ root: styles.title }} variant='h5'>
