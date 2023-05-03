@@ -5,20 +5,42 @@ import Button from '@mui/material/Button';
 import styles from './AddPost.module.scss';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../App';
+import { upload } from '../../APIs';
 
 function AddPost() {
-  const imageUrl = '';
-  const [value, setValue] = React.useState('');
+  const navigate = useNavigate();
+  const { isAuth } = useContext(UserContext);
+  const [value, setValue] = useState('');
+  const [title, setTitle] = useState('');
+  const [tags, setTags] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const inputRef = useRef(null);
 
-  const handleChangeFile = () => {};
+  const handleChangeFile = async (event) => {
+    try {
+      const formData = new FormData();
+      const file = event.target.files[0];
+      formData.append('image', file);
+      const data = await upload(formData);
+      setImageUrl(data.url);
+    } catch (error) {
+      console.warn(error);
+      alert('Ошибка загрузки файла');
+    }
+  };
 
-  const onClickRemoveImage = () => {};
+  const onClickRemoveImage = () => {
+    setImageUrl('');
+  };
 
-  const onChange = React.useCallback((value) => {
+  const onChange = useCallback((value) => {
     setValue(value);
   }, []);
 
-  const options = React.useMemo(
+  const options = useMemo(
     () => ({
       spellChecker: false,
       maxHeight: '400px',
@@ -32,24 +54,34 @@ function AddPost() {
     }),
     []
   );
-
+  if (!isAuth && !window.localStorage.getItem('token')) {
+    navigate('/');
+  }
   return (
     <Paper style={{ padding: 30 }}>
-      <Button variant='outlined' size='large'>
+      <Button
+        onClick={() => inputRef.current.click()}
+        variant='outlined'
+        size='large'
+      >
         Загрузить превью
       </Button>
-      <input type='file' onChange={handleChangeFile} hidden />
+      <input ref={inputRef} type='file' onChange={handleChangeFile} hidden />
       {imageUrl && (
-        <Button variant='contained' color='error' onClick={onClickRemoveImage}>
-          Удалить
-        </Button>
-      )}
-      {imageUrl && (
-        <img
-          className={styles.image}
-          src={`http://localhost:4444${imageUrl}`}
-          alt='Uploaded'
-        />
+        <>
+          <Button
+            variant='contained'
+            color='error'
+            onClick={onClickRemoveImage}
+          >
+            Удалить
+          </Button>
+          <img
+            className={styles.image}
+            src={`http://localhost:4000${imageUrl}`}
+            alt='Uploaded'
+          />
+        </>
       )}
       <br />
       <br />
@@ -57,12 +89,16 @@ function AddPost() {
         classes={{ root: styles.title }}
         variant='standard'
         placeholder='Заголовок статьи...'
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
         fullWidth
       />
       <TextField
         classes={{ root: styles.tags }}
         variant='standard'
-        placeholder='Тэги'
+        placeholder='Теги'
+        value={tags}
+        onChange={(e) => setTags(e.target.value)}
         fullWidth
       />
       <SimpleMDE
