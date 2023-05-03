@@ -38,11 +38,6 @@ function Login() {
       body: JSON.stringify(data),
     });
     const user = await res.json();
-    return user;
-  }
-
-  const onSumbit = async (data) => {
-    const res = await login(data);
     if (!res) {
       alert('Не удалось авторизоваться');
     }
@@ -50,6 +45,10 @@ function Login() {
       window.localStorage.setItem('token', res.token);
       setAuth(true);
     }
+  }
+
+  const onSumbit = (data) => {
+    login(data);
   };
 
   return (
@@ -76,7 +75,13 @@ function Login() {
           label='Пароль'
           fullWidth
         />
-        <Button type='submit' size='large' variant='contained' fullWidth>
+        <Button
+          disabled={!isValid}
+          type='submit'
+          size='large'
+          variant='contained'
+          fullWidth
+        >
           Войти
         </Button>
       </form>

@@ -78,14 +78,14 @@ function Home() {
                       fullName: 'Кирилл Горшков',
                       avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
                     },
-                    text: 'Это тестовый комментарий',
+                    text: 'Im gay)',
                   },
                   {
                     user: {
                       fullName: 'Иван Бочковский',
                       avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
                     },
-                    text: 'When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top',
+                    text: 'me too',
                   },
                 ]}
                 isLoading={false}
