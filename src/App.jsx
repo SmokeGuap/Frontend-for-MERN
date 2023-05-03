@@ -3,29 +3,22 @@ import Container from '@mui/material/Container';
 import { Header } from './components';
 import { Home, FullPost, Registration, AddPost, Login } from './pages';
 import { Route, Routes } from 'react-router-dom';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { authMe } from './APIs';
 
 export const UserContext = createContext();
 function App() {
+  const [user, setUser] = useState({});
   const [isAuth, setAuth] = useState(
     Boolean(window.localStorage.getItem('token'))
   );
-  // async function authMe() {
-  //   const res = await fetch('http://localhost:4000/auth/me', {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: 'Bearer ' + window.localStorage.getItem('token'),
-  //     },
-  //   });
-  //   const user = await res.json();
-  // }
-  // useEffect(() => {
-  //   authMe();
-  // }, []);
+
+  useEffect(() => {
+    authMe().then((data) => setUser(data));
+  }, [isAuth]);
   return (
     <>
-      <UserContext.Provider value={{ isAuth, setAuth }}>
+      <UserContext.Provider value={{ isAuth, setAuth, user }}>
         <Header />
         <Container maxWidth='lg'>
           <Routes>
