@@ -5,12 +5,20 @@ import Button from '@mui/material/Button';
 import styles from './AddPost.module.scss';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import { useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
-import { addPost, upload } from '../../APIs';
+import { addPost, editPost, getPost, upload } from '../../APIs';
 
 function AddPost() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { isAuth } = useContext(UserContext);
   const [imageUrl, setImageUrl] = useState('');
@@ -18,6 +26,27 @@ function AddPost() {
   const [tags, setTags] = useState('');
   const [text, setText] = useState('');
   const inputRef = useRef(null);
+  const isEdit = Boolean(id);
+
+  useEffect(() => {
+    try {
+      if (id) {
+        getPost(id).then((data) => {
+          setImageUrl(data.imageUrl);
+          setTitle(data.title);
+          setTags(data.tags.join(','));
+          setText(data.text);
+        });
+      } else {
+        setImageUrl('');
+        setTitle('');
+        setTags('');
+        setText('');
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  }, [id]);
 
   const handleChangeFile = async (event) => {
     try {
@@ -60,12 +89,11 @@ function AddPost() {
         title,
         text,
         imageUrl,
-        tags: tags.split(','),
+        tags,
       };
-      console.log(fields);
 
-      const data = await addPost(fields);
-      navigate(`/posts/${data._id}`);
+      const data = isEdit ? await editPost(id, fields) : await addPost(fields);
+      navigate(`/posts/${isEdit ? id : data._id}`);
     } catch (error) {
       console.warn(error);
     }
@@ -126,7 +154,7 @@ function AddPost() {
       />
       <div className={styles.buttons}>
         <Button onClick={handleSubmit} size='large' variant='contained'>
-          Опубликовать
+          {isEdit ? 'Редактировать' : 'Опубликовать'}
         </Button>
         <a href='/'>
           <Button size='large'>Отмена</Button>

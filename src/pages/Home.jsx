@@ -7,7 +7,7 @@ import { TagsBlock } from '../components/index.js';
 import { CommentsBlock } from '../components/index.js';
 import { useQuery } from 'react-query';
 import { Alert } from '@mui/material';
-import { getPosts, getTags } from '../APIs/index.js';
+import { deletePost, getPosts, getTags } from '../APIs/index.js';
 import { useSelector } from 'react-redux';
 import { UserContext } from '../App.jsx';
 import { useContext } from 'react';
@@ -48,13 +48,17 @@ function Home() {
                     key={item._id}
                     id={item._id}
                     title={item.title}
-                    imageUrl={`http://localhost:4000${item.imageUrl}`}
+                    imageUrl={
+                      item.imageUrl
+                        ? `http://localhost:4000${item.imageUrl}`
+                        : ''
+                    }
                     user={item.author}
                     createdAt={item.createdAt}
                     viewsCount={item.viewCount}
                     commentsCount={3}
                     tags={item.tags}
-                    isEditable={user?._id == item.author}
+                    isEditable={user?._id == item.author._id}
                   />
                 )
               )}
