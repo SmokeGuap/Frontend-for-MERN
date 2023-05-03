@@ -38,9 +38,6 @@ function Login() {
       body: JSON.stringify(data),
     });
     const user = await res.json();
-    if (res.ok) {
-      setAuth(true);
-    }
     return user;
   }
 
@@ -51,6 +48,7 @@ function Login() {
     }
     if (res.hasOwnProperty('token')) {
       window.localStorage.setItem('token', res.token);
+      setAuth(true);
     }
   };
 

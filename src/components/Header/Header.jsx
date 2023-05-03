@@ -9,6 +9,7 @@ import { UserContext } from '../../App';
 function Header() {
   const { isAuth, setAuth } = useContext(UserContext);
   const onClickLogout = () => {
+    window.localStorage.removeItem('token');
     setAuth(false);
   };
   return (
