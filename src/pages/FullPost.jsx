@@ -14,6 +14,9 @@ function FullPost() {
   if (isLoading) {
     return <Post isLoading={isLoading} isFullPost />;
   }
+  if (isError) {
+    return <Alert severity='error'>Ошибка соединения с сервером</Alert>;
+  }
   return (
     <>
       <Post

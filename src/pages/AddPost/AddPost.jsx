@@ -21,27 +21,34 @@ function AddPost() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuth } = useContext(UserContext);
-  const [imageUrl, setImageUrl] = useState('');
-  const [title, setTitle] = useState('');
-  const [tags, setTags] = useState('');
-  const [text, setText] = useState('');
-  const inputRef = useRef(null);
   const isEdit = Boolean(id);
+
+  const [post, setPost] = useState({
+    imageUrl: '',
+    title: '',
+    tags: '',
+    text: '',
+  });
+  const inputRef = useRef(null);
 
   useEffect(() => {
     try {
       if (id) {
         getPost(id).then((data) => {
-          setImageUrl(data.imageUrl);
-          setTitle(data.title);
-          setTags(data.tags.join(','));
-          setText(data.text);
+          setPost({
+            imageUrl: data.imageUrl,
+            title: data.title,
+            tags: data.tags.join(','),
+            text: data.text,
+          });
         });
       } else {
-        setImageUrl('');
-        setTitle('');
-        setTags('');
-        setText('');
+        setPost({
+          imageUrl: '',
+          title: '',
+          tags: '',
+          text: '',
+        });
       }
     } catch (error) {
       console.warn(error);
@@ -54,7 +61,7 @@ function AddPost() {
       const file = event.target.files[0];
       formData.append('image', file);
       const data = await upload(formData);
-      setImageUrl(data.url);
+      setPost({ ...post, imageUrl: data.url });
     } catch (error) {
       console.warn(error);
       alert('Ошибка загрузки файла');
@@ -62,12 +69,12 @@ function AddPost() {
   };
 
   const onClickRemoveImage = () => {
-    setImageUrl('');
+    setPost({ ...post, imageUrl: '' });
   };
 
-  const onChange = useCallback((value) => {
-    setText(value);
-  }, []);
+  const onChange = (value) => {
+    setPost({ ...post, text: value });
+  };
 
   const options = useMemo(
     () => ({
@@ -83,16 +90,23 @@ function AddPost() {
     }),
     []
   );
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    const {
+      target: { id },
+    } = event;
+    if (id == 'title') {
+      setPost({ ...post, title: value });
+    }
+    if (id == 'tags') {
+      setPost({ ...post, tags: value });
+    }
+  };
   const handleSubmit = async () => {
     try {
-      const fields = {
-        title,
-        text,
-        imageUrl,
-        tags,
-      };
-
-      const data = isEdit ? await editPost(id, fields) : await addPost(fields);
+      const data = isEdit ? await editPost(id, post) : await addPost(post);
       navigate(`/posts/${isEdit ? id : data._id}`);
     } catch (error) {
       console.warn(error);
@@ -112,7 +126,7 @@ function AddPost() {
         Загрузить превью
       </Button>
       <input ref={inputRef} type='file' onChange={handleChangeFile} hidden />
-      {imageUrl && (
+      {post.imageUrl && (
         <>
           <Button
             variant='contained'
@@ -123,7 +137,7 @@ function AddPost() {
           </Button>
           <img
             className={styles.image}
-            src={`http://localhost:4000${imageUrl}`}
+            src={`http://localhost:4000${post.imageUrl}`}
             alt='Uploaded'
           />
         </>
@@ -131,24 +145,26 @@ function AddPost() {
       <br />
       <br />
       <TextField
+        id='title'
         classes={{ root: styles.title }}
         variant='standard'
         placeholder='Заголовок статьи...'
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={post.title}
+        onChange={handleChange}
         fullWidth
       />
       <TextField
+        id='tags'
         classes={{ root: styles.tags }}
         variant='standard'
         placeholder='Теги'
-        value={tags}
-        onChange={(e) => setTags(e.target.value)}
+        value={post.tags}
+        onChange={handleChange}
         fullWidth
       />
       <SimpleMDE
         className={styles.editor}
-        value={text}
+        value={post.text}
         onChange={onChange}
         options={options}
       />

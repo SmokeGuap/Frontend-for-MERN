@@ -13,11 +13,10 @@ import { reg } from '../../APIs';
 
 function Registration() {
   const navigate = useNavigate();
-  const { isAuth, setAuth } = useContext(UserContext);
+  const { isAuth } = useContext(UserContext);
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
@@ -31,8 +30,6 @@ function Registration() {
       navigate('/');
     }
   }, [isAuth]);
-
-
 
   const onSumbit = (data) => {
     reg(data);
