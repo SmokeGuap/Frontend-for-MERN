@@ -14,7 +14,9 @@ function App() {
   );
 
   useEffect(() => {
-    authMe().then((data) => setUser(data));
+    authMe().then((data) => {
+      setUser(data);
+    });
   }, [isAuth]);
   return (
     <>

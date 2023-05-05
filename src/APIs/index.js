@@ -21,12 +21,11 @@ async function login(data) {
     },
     body: JSON.stringify(data),
   });
-  if (!res) {
+  if (!res.ok) {
     alert('Не удалось авторизоваться');
-  }
-  if (res.hasOwnProperty('token')) {
-    window.localStorage.setItem('token', res.token);
-    setAuth(true);
+  } else {
+    const {token} = await res.json();
+    window.localStorage.setItem('token', token);
   }
 }
 async function reg(data) {
@@ -51,8 +50,10 @@ async function authMe() {
       Authorization: 'Bearer ' + window.localStorage.getItem('token'),
     },
   });
-  const user = await res.json();
-  return user;
+  if (res.status != 204) {
+    const user = await res.json();
+    return user;
+  }
 }
 async function upload(data) {
   const res = await fetch('http://localhost:4000/uploads', {
@@ -77,7 +78,7 @@ async function addPost(data) {
   const result = await res.json();
   return result;
 }
-async function editPost(id,data) {
+async function editPost(id, data) {
   const res = await fetch(`http://localhost:4000/posts/${id}`, {
     method: 'PATCH',
     headers: {

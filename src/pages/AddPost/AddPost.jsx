@@ -13,7 +13,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
 import { addPost, editPost, getPost, upload } from '../../APIs';
 
@@ -156,9 +156,9 @@ function AddPost() {
         <Button onClick={handleSubmit} size='large' variant='contained'>
           {isEdit ? 'Редактировать' : 'Опубликовать'}
         </Button>
-        <a href='/'>
+        <Link to='/'>
           <Button size='large'>Отмена</Button>
-        </a>
+        </Link>
       </div>
     </Paper>
   );
