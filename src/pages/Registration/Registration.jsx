@@ -32,8 +32,13 @@ function Registration() {
     }
   }, [isAuth]);
 
-  const onSumbit = (data) => {
-    reg(data);
+  const onSumbit = async (data) => {
+    const result = await reg(data);
+    if (result == 'Не удалось зарегистрироваться') {
+      alert('Не удалось зарегистрироваться');
+    } else {
+      navigate('/login');
+    }
   };
   const isValidEmail = (email) =>
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(

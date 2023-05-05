@@ -32,11 +32,8 @@ async function reg(data) {
     },
     body: JSON.stringify(data),
   });
-  if (!res.ok) {
-    alert('Не удалось зарегистрироваться');
-  } else {
-    navigate('/login');
-  }
+  const result = await res.json();
+  return result;
 }
 async function authMe() {
   const res = await fetch('http://localhost:4000/auth/me', {
