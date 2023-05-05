@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { getPost } from '../APIs/index.js';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown.js';
+import { Alert } from '@mui/material';
 
 function FullPost() {
   const { id } = useParams();

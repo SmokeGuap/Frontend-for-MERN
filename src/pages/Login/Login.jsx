@@ -2,16 +2,18 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import { Alert } from '@mui/material';
 
 import styles from './Login.module.scss';
 import { useForm } from 'react-hook-form';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../APIs';
 
 function Login() {
   const navigate = useNavigate();
+  const [alert, setAlert] = useState([]);
   const { isAuth, setAuth } = useContext(UserContext);
   const {
     register,
@@ -20,22 +22,32 @@ function Login() {
     formState: { errors, isValid },
   } = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'xdfgdfg@dsfg.com',
+      password: 'sdfsdfsdfsdf',
     },
+    mode: 'onChange',
   });
-
   useEffect(() => {
     if (isAuth) {
       navigate('/');
     }
   }, [isAuth]);
 
-  const onSumbit = (data) => {
-    login(data);
-    setAuth(true);
+  const onSumbit = async (data) => {
+    const result = await login(data);
+    if (Array.isArray(result)) {
+      setAlert(result);
+    }
+    if (!Array.isArray(result) && result?.msg) {
+      const temp = [];
+      temp.push(result);
+      setAlert(temp);
+    }
+    if (result?.token) {
+      setAuth(true);
+      window.localStorage.setItem('token', result.token);
+    }
   };
-
   return (
     <Paper classes={{ root: styles.root }}>
       <Typography classes={{ root: styles.title }} variant='h5'>
@@ -70,6 +82,14 @@ function Login() {
           Войти
         </Button>
       </form>
+      {alert.length > 0 &&
+        alert.map((item, index) => {
+          return (
+            <Alert className={styles.alert} key={index} severity='error'>
+              {item.msg}
+            </Alert>
+          );
+        })}
     </Paper>
   );
 }
