@@ -91,6 +91,7 @@ async function deletePost(id) {
     },
   });
   const result = await res.json();
+  return result;
 }
 export {
   getPosts,

@@ -16,8 +16,8 @@ function Header() {
     <div className={styles.root}>
       <Container maxWidth='lg'>
         <div className={styles.inner}>
-          <Link className={styles.logo} to='/'>
-            <div>MERN</div>
+          <Link to='/'>
+            <Button variant='contained'>MERN</Button>
           </Link>
           <div className={styles.buttons}>
             {isAuth ? (
