@@ -69,6 +69,8 @@ async function addPost(data) {
     body: JSON.stringify(data),
   });
   const result = await res.json();
+  console.log(res);
+  console.log(result);
   return result;
 }
 async function editPost(id, data) {
