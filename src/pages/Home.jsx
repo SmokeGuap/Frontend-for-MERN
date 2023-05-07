@@ -6,13 +6,14 @@ import { Post } from '../components/index.js';
 import { TagsBlock } from '../components/index.js';
 import { CommentsBlock } from '../components/index.js';
 import { useQuery } from 'react-query';
-import { Alert } from '@mui/material';
+import { Alert, Box, Typography } from '@mui/material';
 import { getPosts, getTags } from '../APIs/index.js';
 import { UserContext } from '../App.jsx';
 import { useContext, useState } from 'react';
 
 function Home() {
-  const [filter, setFilter] = useState(0);
+  const [viewsFilter, setViewsFilter] = useState(0);
+  const [tagsFilter, setTagsFilter] = useState('');
   const {
     data: dataPosts,
     isLoading: isLoadingPosts,
@@ -25,10 +26,23 @@ function Home() {
   } = useQuery('tags', getTags);
   const { user } = useContext(UserContext);
 
-  const filterPost = (arr) => {
-    const sort = arr.slice();
+  const filterPostByViews = (arr) => {
+    const sort = [...arr];
     sort.sort((a, b) => b.viewCount - a.viewCount);
     return sort;
+  };
+  const filterPostByTags = (arr, tag) => {
+    if (tag == '') return arr;
+
+    const sortedArr = arr.filter((item) => {
+      for (let i = 0; i < item.tags.length; i++) {
+        if (item.tags[i] == tag) {
+          return true;
+        }
+      }
+      return false;
+    });
+    return sortedArr;
   };
   return (
     <>
@@ -36,17 +50,26 @@ function Home() {
         <Alert severity='error'>Ошибка соединения с сервером</Alert>
       ) : (
         <>
-          <Tabs style={{ marginBottom: 15 }} value={filter}>
-            <Tab onClick={() => setFilter(0)} label='Новые' />
-            <Tab onClick={() => setFilter(1)} label='Популярные' />
-          </Tabs>
+          <Box
+            sx={{
+              display: 'flex',
+            }}
+          >
+            <Tabs style={{ marginBottom: 15 }} value={viewsFilter}>
+              <Tab onClick={() => setViewsFilter(0)} label='Новые' />
+              <Tab onClick={() => setViewsFilter(1)} label='Популярные' />
+            </Tabs>
+            <Typography variant='h4' color='primary'>
+              #{tagsFilter}
+            </Typography>
+          </Box>
           <Grid container spacing={4}>
             <Grid xs={8} item>
               {(isLoadingPosts
                 ? [...Array(5)]
-                : filter
-                ? filterPost(dataPosts)
-                : dataPosts
+                : viewsFilter
+                ? filterPostByViews(filterPostByTags(dataPosts, tagsFilter))
+                : filterPostByTags(dataPosts, tagsFilter)
               ).map((item, index) =>
                 isLoadingPosts ? (
                   <Post key={index} isLoading={true} />
@@ -74,7 +97,11 @@ function Home() {
               {isErrorTags ? (
                 <Alert severity='error'>Ошибка соединения с сервером</Alert>
               ) : (
-                <TagsBlock items={dataTags} isLoading={isLoadingTags} />
+                <TagsBlock
+                  items={dataTags}
+                  isLoading={isLoadingTags}
+                  tagsFilter={setTagsFilter}
+                />
               )}
               <CommentsBlock
                 items={[
