@@ -6,9 +6,12 @@ import { useQuery } from 'react-query';
 import { getPost } from '../APIs/index.js';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown.js';
 import { Alert } from '@mui/material';
+import { useContext } from 'react';
+import { UserContext } from '../App.jsx';
 
 function FullPost() {
   const { id } = useParams();
+  const { user } = useContext(UserContext);
   const { data, isLoading, isError } = useQuery(['post', id], () =>
     getPost(id)
   );
@@ -52,7 +55,7 @@ function FullPost() {
         ]}
         isLoading={false}
       >
-        <AddComment />
+        <AddComment me={user} />
       </CommentsBlock>
     </>
   );
