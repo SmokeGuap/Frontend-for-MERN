@@ -5,7 +5,6 @@ It is frontend part of MERN App
 - React
 - React Router
 - React Query
-- Apollo Client
 - Material UI
 - React Hook Form
 - SCSS
