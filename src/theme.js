@@ -5,6 +5,9 @@ export const theme = createTheme({
     primary: {
       main: '#8000b3',
     },
+    secondary: {
+      main: '#ff3232',
+    },
   },
   typography: {
     button: {
