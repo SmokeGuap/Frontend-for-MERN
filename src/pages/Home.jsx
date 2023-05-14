@@ -31,7 +31,6 @@ function Home() {
   } = useQuery('comments', getComments);
 
   const { user } = useContext(UserContext);
-  console.log(dataComments);
   const filterPostByViews = (arr) => {
     const sort = [...arr];
     sort.sort((a, b) => b.viewCount - a.viewCount);
@@ -92,7 +91,6 @@ function Home() {
                     user={item.author}
                     createdAt={item.createdAt}
                     viewsCount={item.viewCount}
-                    commentsCount={3}
                     tags={item.tags}
                     isEditable={user?._id == item.author._id}
                   />
