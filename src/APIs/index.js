@@ -105,6 +105,18 @@ async function editPost(id, data) {
   const result = await res.json();
   return result;
 }
+async function editComment(id, data) {
+  const res = await fetch(`http://localhost:4000/comments/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+    body: JSON.stringify(data),
+  });
+  const result = await res.json();
+  return result;
+}
 async function deletePost(id) {
   const res = await fetch(`http://localhost:4000/posts/${id}`, {
     method: 'DELETE',
@@ -140,4 +152,5 @@ export {
   deletePost,
   deleteComment,
   editPost,
+  editComment,
 };

@@ -1,3 +1,5 @@
+import SideBlock from './SideBlock/SideBlock.jsx';
+import { AddComment } from '../components/index.js';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
@@ -6,16 +8,17 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import Skeleton from '@mui/material/Skeleton';
 
-import SideBlock from './SideBlock/SideBlock.jsx';
-import { IconButton } from '@mui/material';
+import { Button, IconButton, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
-import { Fragment } from 'react';
-import { deleteComment } from '../APIs/index.js';
+import CancelIcon from '@mui/icons-material/ArrowForwardIos';
+import { Fragment, useState } from 'react';
+import { deleteComment, editComment } from '../APIs/index.js';
 import { queryClient } from '../main.jsx';
 import { useMutation } from 'react-query';
 
-function CommentsBlock({ me, items, children, isLoading = true }) {
+function CommentsBlock({ me, items, isLoading = true }) {
+  const [comment, setComment] = useState({ id: '', text: '' });
   const deleteMutation = useMutation((id) => deleteComment(id), {
     onSuccess: () => queryClient.invalidateQueries(['comment']),
   });
@@ -23,7 +26,19 @@ function CommentsBlock({ me, items, children, isLoading = true }) {
   const onClickRemove = (id) => {
     deleteMutation.mutate(id);
   };
+  const updateMutation = useMutation(
+    (comment) => editComment(comment.id, { text: comment.text }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['comment']);
+        setComment({ id: '', text: '' });
+      },
+    }
+  );
 
+  const onClickUpdate = (comment) => {
+    updateMutation.mutate(comment);
+  };
   return (
     <SideBlock title='Комментарии'>
       <List>
@@ -48,30 +63,70 @@ function CommentsBlock({ me, items, children, isLoading = true }) {
                       src={obj.author.avatarUrl}
                     />
                   </ListItemAvatar>
-                  <ListItemText
-                    primary={obj.author.fullName}
-                    secondary={obj.text}
-                  />
-                  {obj?.author._id == me?._id ? (
-                    <div>
-                      <IconButton color='primary'>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => onClickRemove(obj._id)}
-                        color='secondary'
+                  {obj._id == comment.id ? (
+                    <>
+                      <TextField
+                        onChange={(e) => {
+                          setComment({ ...comment, text: e.target.value });
+                        }}
+                        value={comment.text}
+                        label='Комментировать'
+                        fullWidth
+                        variant='standard'
+                      />
+                      <Button
+                        onClick={() => {
+                          onClickUpdate(comment);
+                        }}
+                        style={{
+                          marginLeft: '1rem',
+                          height: '3rem',
+                        }}
+                        type='submit'
+                        variant='contained'
                       >
-                        <DeleteIcon />
+                        Отправить
+                      </Button>
+                      <IconButton
+                        onClick={() => setComment({ id: '', text: '' })}
+                        color='primary'
+                      >
+                        <CancelIcon fontSize='large' />
                       </IconButton>
-                    </div>
-                  ) : null}
+                    </>
+                  ) : (
+                    <>
+                      <ListItemText
+                        primary={obj.author.fullName}
+                        secondary={obj.text}
+                      />
+                      {obj?.author._id == me?._id ? (
+                        <div>
+                          <IconButton
+                            onClick={() =>
+                              setComment({ id: obj._id, text: obj.text })
+                            }
+                            color='primary'
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => onClickRemove(obj._id)}
+                            color='secondary'
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </div>
+                      ) : null}
+                    </>
+                  )}
                 </>
               )}
             </ListItem>
             <Divider variant='inset' />
           </Fragment>
         ))}
-        {children}
+        {me && <AddComment me={me} />}
       </List>
     </SideBlock>
   );
