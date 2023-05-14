@@ -8,6 +8,11 @@ async function getTags() {
   const data = await res.json();
   return data;
 }
+async function getComments() {
+  const res = await fetch('http://localhost:4000/comments/');
+  const data = await res.json();
+  return data;
+}
 async function getPost(id) {
   const res = await fetch(`http://localhost:4000/posts/${id}`);
   const data = await res.json();
@@ -98,6 +103,7 @@ async function deletePost(id) {
 export {
   getPosts,
   getPost,
+  getComments,
   getTags,
   login,
   reg,
