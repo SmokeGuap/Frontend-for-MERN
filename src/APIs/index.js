@@ -13,6 +13,11 @@ async function getComments() {
   const data = await res.json();
   return data;
 }
+async function getCommentsByPost(id) {
+  const res = await fetch(`http://localhost:4000/comments/${id}`);
+  const data = await res.json();
+  return data;
+}
 async function getPost(id) {
   const res = await fetch(`http://localhost:4000/posts/${id}`);
   const data = await res.json();
@@ -74,8 +79,18 @@ async function addPost(data) {
     body: JSON.stringify(data),
   });
   const result = await res.json();
-  console.log(res);
-  console.log(result);
+  return result;
+}
+async function addComment(data) {
+  const res = await fetch('http://localhost:4000/comments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + window.localStorage.getItem('token'),
+    },
+    body: JSON.stringify(data),
+  });
+  const result = await res.json();
   return result;
 }
 async function editPost(id, data) {
@@ -104,12 +119,14 @@ export {
   getPosts,
   getPost,
   getComments,
+  getCommentsByPost,
   getTags,
   login,
   reg,
   authMe,
   upload,
   addPost,
+  addComment,
   deletePost,
   editPost,
 };
